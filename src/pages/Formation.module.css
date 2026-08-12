@@ -1,0 +1,20 @@
+.container { display: flex; flex-direction: column; gap: var(--space-5); }
+.loading { text-align: center; padding: var(--space-6); color: var(--neutral-500); }
+.tableWrapper { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; }
+.table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--neutral-500);
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--neutral-200);
+  background: var(--neutral-50);
+}
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--neutral-100);
+  font-size: var(--font-size-sm);
+  color: var(--neutral-700);
+}

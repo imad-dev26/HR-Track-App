@@ -1,0 +1,213 @@
+// Core domain types for HR Track
+
+export type UserRole = "Admin" | "Guest";
+
+export interface User {
+  id: number;
+  username: string;
+  role: UserRole;
+  display_name: string | null;
+}
+
+export interface Employee {
+  id: number;
+  matricule: string;
+  nom: string;
+  prenom: string;
+  date_naissance: string | null;
+  lieu_naissance: string | null;
+  national_id: string | null;
+  securite_sociale: string | null;
+  telephone: string | null;
+  adresse: string | null;
+  compte_bancaire: string | null;
+  situation_familiale: string | null;
+  nombre_enfants: number;
+  category_id: number | null;
+  current_status_id: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EmployeeStatusType {
+  id: number;
+  name: string;
+  active: number;
+  sort_order: number;
+}
+
+export interface Service {
+  id: number;
+  name: string;
+  active: number;
+  sort_order: number;
+}
+
+export interface Section {
+  id: number;
+  service_id: number;
+  name: string;
+  active: number;
+  sort_order: number;
+}
+
+export interface Function {
+  id: number;
+  name: string;
+  active: number;
+  sort_order: number;
+}
+
+export interface Level {
+  id: number;
+  name: string;
+  sort_order: number;
+}
+
+export interface ProfessionalCategory {
+  id: number;
+  name: string;
+  active: number;
+  sort_order: number;
+}
+
+export interface ContractType {
+  id: number;
+  name: string;
+  active: number;
+  sort_order: number;
+}
+
+export interface Contract {
+  id: number;
+  employee_id: number;
+  contract_type_id: number;
+  start_date: string;
+  end_date: string | null;
+  is_current: number;
+  notes: string | null;
+}
+
+export interface LeaveType {
+  id: number;
+  name: string;
+  active: number;
+  sort_order: number;
+}
+
+export interface LeaveExercise {
+  id: number;
+  name: string;
+  start_date: string;
+  end_date: string;
+}
+
+export interface Leave {
+  id: number;
+  employee_id: number;
+  leave_type_id: number;
+  exercise_id: number | null;
+  start_date: string;
+  end_date: string;
+  number_days: number;
+  status: string;
+  observation: string | null;
+}
+
+export interface MedicalRecord {
+  id: number;
+  employee_id: number;
+  restriction_type: string | null;
+  decision: string | null;
+  type: "temporary" | "permanent";
+  start_date: string;
+  duration_months: number | null;
+  end_date: string | null;
+  status: string;
+}
+
+export interface DisciplinaryAction {
+  id: number;
+  employee_id: number;
+  action_type: string;
+  date: string;
+  description: string | null;
+  duration_days: number | null;
+}
+
+export interface TrainingRecord {
+  id: number;
+  employee_id: number;
+  mission_order_number: string | null;
+  subject: string | null;
+  location: string | null;
+  start_date: string;
+  end_date: string | null;
+}
+
+export interface Accident {
+  id: number;
+  employee_id: number;
+  accident_date: string;
+  stop_start: string | null;
+  stop_end: string | null;
+  location: string | null;
+  type: string | null;
+  cause: string | null;
+  injury: string | null;
+  investigation: string | null;
+}
+
+export interface AttendanceException {
+  id: number;
+  employee_id: number;
+  date: string;
+  status: string;
+  reason: string | null;
+  observation: string | null;
+}
+
+export interface CompanyInfo {
+  id: number;
+  name: string | null;
+  address: string | null;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  logo_path: string | null;
+  fiscal_id: string | null;
+  legal_form: string | null;
+}
+
+export interface AppSetting {
+  id: number;
+  key: string;
+  value: string | null;
+  category: string;
+  description: string | null;
+}
+
+export interface Notification {
+  id: number;
+  employee_id: number | null;
+  type: string;
+  message: string;
+  date: string;
+  read_status: number;
+}
+
+export interface AuditLogEntry {
+  id: number;
+  user_id: number | null;
+  action: string;
+  table_name: string;
+  record_id: number | null;
+  old_value: string | null;
+  new_value: string | null;
+  date: string;
+}
+
+export interface DatabaseResult {
+  lastInsertId?: number;
+  rowsAffected?: number;
+}
