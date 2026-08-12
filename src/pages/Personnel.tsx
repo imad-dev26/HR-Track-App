@@ -20,7 +20,7 @@ export default function Personnel() {
   useEffect(() => {
     async function loadEmployees() {
       try {
-        const rows = await select<>(
+        const rows = await select<Employee>(
         "SELECT * FROM employees ORDER BY nom, prenom"
         );
         setEmployees(rows);

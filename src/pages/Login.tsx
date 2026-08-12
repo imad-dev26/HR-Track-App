@@ -21,7 +21,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const users = await select<>(
+      const users = await select<User>(
         "SELECT id, username, role, display_name FROM users WHERE username = ? AND active = 1",
         [username]
       );

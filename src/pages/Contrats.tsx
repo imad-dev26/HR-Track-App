@@ -20,7 +20,7 @@ export default function Contrats() {
   useEffect(() => {
     async function load() {
       try {
-        setContractTypes(await select<>(
+        setContractTypes(await select(
         "SELECT * FROM contract_types ORDER BY sort_order"));
         const rows = await select<Contract & { employee_nom?: string; employee_prenom?: string; type_name?: string }>(
           `SELECT c.*, e.nom as employee_nom, e.prenom as employee_prenom, ct.name as type_name

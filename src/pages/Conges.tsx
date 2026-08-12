@@ -21,9 +21,9 @@ export default function Conges() {
   useEffect(() => {
     async function load() {
       try {
-        setLeaveTypes(await select<>(
+        setLeaveTypes(await select(
         "SELECT * FROM leave_types ORDER BY sort_order"));
-        setExercises(await select<>(
+        setExercises(await select(
         "SELECT * FROM leave_exercises ORDER BY start_date DESC"));
         const rows = await select<Leave & { employee_nom?: string; employee_prenom?: string; type_name?: string }>(
           `SELECT l.*, e.nom as employee_nom, e.prenom as employee_prenom, lt.name as type_name

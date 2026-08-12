@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PageHeader from "@components/ui/PageHeader";
 import Card from "@components/ui/Card";
 import Button from "@components/ui/Button";
-import { select, execute } from "@lib/database";
+import { select, execute as run } from "@lib/database";
 import { useAuthStore } from "@store/authStore";
 import { isAdmin } from "@lib/permissions";
 import type { CompanyInfo, AppSetting } from "@app-types/index";
@@ -24,10 +24,10 @@ export default function Administration() {
 
   async function loadData() {
     try {
-      const companyRows = await select<>(
+      const companyRows = await select(
         "SELECT * FROM company_info WHERE id = 1");
       if (companyRows.length > 0) setCompany(companyRows[0]);
-      setSettings(await select<>(
+      setSettings(await select(
         "SELECT * FROM app_settings ORDER BY category, key"));
     } catch {
       // Tables might not exist

@@ -14,7 +14,7 @@ export default function Notifications() {
   useEffect(() => {
     async function load() {
       try {
-        const rows = await select<>(
+        const rows = await select<Notification>(
         "SELECT * FROM notifications ORDER BY date DESC LIMIT 50"
         );
         setNotifications(rows);
