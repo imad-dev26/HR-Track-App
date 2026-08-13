@@ -37,4 +37,4 @@ jobs:
 
       - name: Build Tauri backend
         working-directory: src-tauri
-        run: cargo build --locked --verbose
+        run: cargo build --verbose
