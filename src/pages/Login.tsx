@@ -2,7 +2,7 @@ import { useAuthStore } from "@store/authStore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, Lock, User as UserIcon, Eye, EyeOff } from "lucide-react";
-import { select } from "@lib/database";
+import { invoke } from "@tauri-apps/api/core";
 import type { User } from "@app-types/index";
 import styles from "./Login.module.css";
 
@@ -21,22 +21,13 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const users = await select<User>(
-        "SELECT id, username, role, display_name FROM users WHERE username = ? AND active = 1",
-        [username]
-      );
-
-      if (users.length === 0) {
-        setError("Utilisateur introuvable ou inactif.");
-        setLoading(false);
-        return;
-      }
-
-      const user = users[0];
-      login(user);
+      // Call backend Tauri auth command which verifies password securely
+      const user = await invoke<User>("login", { username, password });
+      // The returned object intentionally does not include password_hash
+      login(user as User);
       navigate("/");
     } catch (err) {
-      setError("Erreur de connexion à la base de données. " + String(err));
+      setError(String(err) || "Erreur de connexion à la base de données.");
     } finally {
       setLoading(false);
     }

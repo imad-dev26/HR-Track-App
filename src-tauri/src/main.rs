@@ -3,6 +3,7 @@
 
 mod database;
 mod migrations;
+mod auth;
 
 use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
@@ -74,6 +75,7 @@ fn get_migrations() -> Vec<Migration> {
 
 fn main() {
     tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![auth::login])
         .plugin(
             tauri_plugin_sql::Builder::default()
                 .add_migrations("sqlite:hrtrack.db", get_migrations())
