@@ -84,21 +84,25 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .setup(|app| {
-            let app_data_dir = app.path().app_data_dir().map_err(|e| {
-                eprintln!("[startup] cannot resolve app data dir: {}", e);
-                format!("Cannot resolve app data dir: {}", e)
-            })?;
-            let db_path = database::get_db_path(&app_data_dir);
+            let app_data_dir = app
+                .path()
+                .app_data_dir()
+                .map_err(|e| {
+                    eprintln!("[startup] cannot resolve app data dir: {}", e);
+                    Box::new(e) as Box<dyn std::error::Error>
+                })?;
+
+            let db_path = database::get_db_path(app_data_dir.as_path());
             eprintln!("[startup] database path: {}", db_path.display());
 
             let conn = database::open_connection(&db_path).map_err(|e| {
                 eprintln!("[startup] cannot open database: {}", e);
-                format!("Cannot open database: {}", e)
+                Box::new(e) as Box<dyn std::error::Error>
             })?;
 
             migrations::apply_migrations(&conn).map_err(|e| {
                 eprintln!("[startup] migration failed: {}", e);
-                format!("Migration failed: {}", e)
+                Box::new(e) as Box<dyn std::error::Error>
             })?;
 
             eprintln!("[startup] database initialized, migrations applied");

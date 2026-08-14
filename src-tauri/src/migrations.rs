@@ -45,7 +45,6 @@ pub fn apply_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
 
         if let Err(e) = conn.execute_batch(sql) {
             eprintln!("[migrations] FAILED v{} {}: {}", version, description, e);
-            // Re-enable FK before returning so the connection is in a clean state
             let _ = conn.execute_batch("PRAGMA foreign_keys=ON;");
             return Err(e);
         }
@@ -58,7 +57,6 @@ pub fn apply_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         eprintln!("[migrations] applied {} (v{}) OK", description, version);
     }
 
-    // Re-enable FK enforcement now that schema is complete
     conn.execute_batch("PRAGMA foreign_keys=ON;")?;
     eprintln!("[migrations] all migrations applied successfully");
 

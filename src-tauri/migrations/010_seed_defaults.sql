@@ -59,7 +59,7 @@ INSERT OR IGNORE INTO leave_types (name, sort_order) VALUES
 
 -- Default admin user (password: admin123 — to be changed on first login)
 INSERT OR IGNORE INTO users (username, password_hash, role, display_name) VALUES
-    ('admin', '$2b$10$pSTxBPzzyWJPtRK5iogIv.Dqdj6K01DT8Iprd6g7upUvYFBaQworK', 'Admin', 'Administrateur');
+    ('admin', '$2a$10$placeholder_hash_replace_on_first_run', 'Admin', 'Administrateur');
 
 -- Default app settings
 INSERT OR IGNORE INTO app_settings (key, value, category, description) VALUES
