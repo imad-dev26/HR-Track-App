@@ -2,6 +2,10 @@ use rusqlite::Connection;
 use std::path::Path;
 
 pub fn open_connection(db_path: &Path) -> Result<Connection, rusqlite::Error> {
+    if let Some(parent) = db_path.parent() {
+        std::fs::create_dir_all(parent)
+            .map_err(|e| rusqlite::Error::InvalidParameterName(e.to_string()))?;
+    }
     let conn = Connection::open(db_path)?;
     conn.execute_batch("PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;")?;
     Ok(conn)
