@@ -5,6 +5,7 @@ mod database;
 mod migrations;
 mod auth;
 
+use tauri::{Manager};
 use tauri_plugin_sql::{Migration, MigrationKind};
 
 fn get_migrations() -> Vec<Migration> {
@@ -82,7 +83,25 @@ fn main() {
         )
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .setup(|_app| {
+        .setup(|app| {
+            // Apply migrations using a DB connection opened to the app data directory
+            let app_data_dir = app
+                .path()
+                .app_data_dir()
+                .expect("failed to get app data directory");
+
+            let db_path = crate::database::get_db_path(app_data_dir.as_path());
+
+            // Open connection and apply migrations; propagate errors to the setup result
+            match crate::database::open_connection(&db_path) {
+                Ok(conn) => {
+                    if let Err(e) = crate::migrations::apply_migrations(&conn) {
+                        return Err(Box::new(e) as Box<dyn std::error::Error>);
+                    }
+                }
+                Err(e) => return Err(Box::new(e) as Box<dyn std::error::Error>),
+            }
+
             Ok(())
         })
         .run(tauri::generate_context!())
