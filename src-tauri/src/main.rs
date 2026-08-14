@@ -5,7 +5,6 @@ mod database;
 mod migrations;
 mod auth;
 
-use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
 
 fn get_migrations() -> Vec<Migration> {

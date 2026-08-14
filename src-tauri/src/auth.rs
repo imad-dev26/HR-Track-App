@@ -2,7 +2,7 @@ use crate::database::{get_db_path, open_connection};
 use bcrypt::verify;
 use rusqlite::params;
 use serde::Serialize;
-use tauri::AppHandle;
+use tauri::{AppHandle, Manager};
 
 #[derive(Serialize)]
 pub struct PublicUser {
