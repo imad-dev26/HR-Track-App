@@ -1,0 +1,17 @@
+{
+  "identifier": "default",
+  "description": "Default permissions for HR Track",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "sql:default",
+    "sql:allow-load",
+    "sql:allow-execute",
+    "sql:allow-select",
+    "sql:allow-close",
+    "dialog:default",
+    "fs:default",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file"
+  ]
+}
