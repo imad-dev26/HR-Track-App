@@ -14,13 +14,13 @@ pub struct PublicUser {
 
 #[tauri::command]
 pub fn login(app_handle: AppHandle, username: String, password: String) -> Result<PublicUser, String> {
-    // Resolve DB path from app data dir
+    // Resolve DB path from app data dir (Tauri v2 API)
     let app_data_dir = app_handle
-        .path_resolver()
+        .path()
         .app_data_dir()
-        .ok_or_else(|| "Application data directory not available".to_string())?;
+        .expect("failed to get app data directory");
 
-    let db_path = get_db_path(&app_data_dir);
+    let db_path = get_db_path(app_data_dir.as_path());
     let conn = open_connection(&db_path).map_err(|e| e.to_string())?;
 
     let mut stmt = conn
