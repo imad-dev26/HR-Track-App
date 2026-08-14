@@ -2,7 +2,7 @@ use crate::database::{get_db_path, open_connection};
 use bcrypt::verify;
 use rusqlite::params;
 use serde::Serialize;
-use tauri::AppHandle;
+use tauri::{AppHandle, Manager};
 
 #[derive(Serialize)]
 pub struct PublicUser {
@@ -14,11 +14,10 @@ pub struct PublicUser {
 
 #[tauri::command]
 pub fn login(app_handle: AppHandle, username: String, password: String) -> Result<PublicUser, String> {
-    // Resolve DB path from app data dir
     let app_data_dir = app_handle
-        .path_resolver()
+        .path()
         .app_data_dir()
-        .ok_or_else(|| "Application data directory not available".to_string())?;
+        .map_err(|e| format!("Application data directory not available: {}", e))?;
 
     let db_path = get_db_path(&app_data_dir);
     let conn = open_connection(&db_path).map_err(|e| e.to_string())?;

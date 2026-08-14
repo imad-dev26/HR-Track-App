@@ -42,13 +42,13 @@ fn get_migrations() -> Vec<Migration> {
         },
         Migration {
             version: 6,
-            description: "create_medical_discipline_training_tables",
+            description: "create_medical_discipline_training",
             sql: include_str!("../migrations/006_medical_discipline_training.sql"),
             kind: MigrationKind::Up,
         },
         Migration {
             version: 7,
-            description: "create_accidents_attendance_tables",
+            description: "create_accidents_attendance",
             sql: include_str!("../migrations/007_accidents_attendance.sql"),
             kind: MigrationKind::Up,
         },
@@ -83,7 +83,14 @@ fn main() {
         )
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .setup(|_app| {
+        .setup(|app| {
+            let app_data_dir = app.path().app_data_dir()
+                .map_err(|e| format!("Cannot resolve app data dir: {}", e))?;
+            let db_path = database::get_db_path(&app_data_dir);
+            let conn = database::open_connection(&db_path)
+                .map_err(|e| format!("Cannot open database: {}", e))?;
+            migrations::apply_migrations(&conn)
+                .map_err(|e| format!("Migration failed: {}", e))?;
             Ok(())
         })
         .run(tauri::generate_context!())
