@@ -14,6 +14,10 @@ const MIGRATION_FILES: &[(&str, &str)] = &[
 ];
 
 pub fn apply_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
+    // Disable FK checks during migration so tables can be created in order
+    // even when forward references exist (e.g. employees -> professional_categories).
+    conn.execute_batch("PRAGMA foreign_keys=OFF;")?;
+
     conn.execute_batch(
         "CREATE TABLE IF NOT EXISTS _migrations (
             version INTEGER PRIMARY KEY,
@@ -22,24 +26,41 @@ pub fn apply_migrations(conn: &Connection) -> Result<(), rusqlite::Error> {
         );"
     )?;
 
-    for (version, (description, sql)) in MIGRATION_FILES.iter().enumerate() {
-        let v = (version + 1) as i64;
+    for (index, (description, sql)) in MIGRATION_FILES.iter().enumerate() {
+        let version = (index + 1) as i64;
+
         let already_applied: bool = conn
             .query_row(
                 "SELECT COUNT(*) > 0 FROM _migrations WHERE version = ?1",
-                rusqlite::params![v],
+                rusqlite::params![version],
                 |row| row.get(0),
             )
             .unwrap_or(false);
 
-        if !already_applied {
-            conn.execute_batch(sql)?;
-            conn.execute(
-                "INSERT INTO _migrations (version, description) VALUES (?1, ?2)",
-                rusqlite::params![v, description],
-            )?;
+        if already_applied {
+            continue;
         }
+
+        eprintln!("[migrations] applying {} (v{})", description, version);
+
+        if let Err(e) = conn.execute_batch(sql) {
+            eprintln!("[migrations] FAILED v{} {}: {}", version, description, e);
+            // Re-enable FK before returning so the connection is in a clean state
+            let _ = conn.execute_batch("PRAGMA foreign_keys=ON;");
+            return Err(e);
+        }
+
+        conn.execute(
+            "INSERT INTO _migrations (version, description) VALUES (?1, ?2)",
+            rusqlite::params![version, description],
+        )?;
+
+        eprintln!("[migrations] applied {} (v{}) OK", description, version);
     }
+
+    // Re-enable FK enforcement now that schema is complete
+    conn.execute_batch("PRAGMA foreign_keys=ON;")?;
+    eprintln!("[migrations] all migrations applied successfully");
 
     Ok(())
 }
