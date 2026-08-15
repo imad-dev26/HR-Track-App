@@ -5,7 +5,7 @@ mod database;
 mod migrations;
 mod auth;
 
-use tauri::{Manager};
+use tauri::Manager;
 use tauri_plugin_sql::{Migration, MigrationKind};
 
 fn get_migrations() -> Vec<Migration> {
@@ -42,13 +42,13 @@ fn get_migrations() -> Vec<Migration> {
         },
         Migration {
             version: 6,
-            description: "create_medical_discipline_training_tables",
+            description: "create_medical_discipline_training",
             sql: include_str!("../migrations/006_medical_discipline_training.sql"),
             kind: MigrationKind::Up,
         },
         Migration {
             version: 7,
-            description: "create_accidents_attendance_tables",
+            description: "create_accidents_attendance",
             sql: include_str!("../migrations/007_accidents_attendance.sql"),
             kind: MigrationKind::Up,
         },
@@ -84,24 +84,28 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .setup(|app| {
-            // Apply migrations using a DB connection opened to the app data directory
             let app_data_dir = app
                 .path()
                 .app_data_dir()
-                .expect("failed to get app data directory");
+                .map_err(|e| {
+                    eprintln!("[startup] cannot resolve app data dir: {}", e);
+                    Box::new(e) as Box<dyn std::error::Error>
+                })?;
 
-            let db_path = crate::database::get_db_path(app_data_dir.as_path());
+            let db_path = database::get_db_path(app_data_dir.as_path());
+            eprintln!("[startup] database path: {}", db_path.display());
 
-            // Open connection and apply migrations; propagate errors to the setup result
-            match crate::database::open_connection(&db_path) {
-                Ok(conn) => {
-                    if let Err(e) = crate::migrations::apply_migrations(&conn) {
-                        return Err(Box::new(e) as Box<dyn std::error::Error>);
-                    }
-                }
-                Err(e) => return Err(Box::new(e) as Box<dyn std::error::Error>),
-            }
+            let conn = database::open_connection(&db_path).map_err(|e| {
+                eprintln!("[startup] cannot open database: {}", e);
+                Box::new(e) as Box<dyn std::error::Error>
+            })?;
 
+            migrations::apply_migrations(&conn).map_err(|e| {
+                eprintln!("[startup] migration failed: {}", e);
+                Box::new(e) as Box<dyn std::error::Error>
+            })?;
+
+            eprintln!("[startup] database initialized, migrations applied");
             Ok(())
         })
         .run(tauri::generate_context!())
