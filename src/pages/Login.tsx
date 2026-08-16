@@ -27,7 +27,8 @@ export default function Login() {
       login(user as User);
       navigate("/");
     } catch (err) {
-      setError(String(err) || "Erreur de connexion à la base de données.");
+      const msg = typeof err === "string" ? err : "Erreur de connexion.";
+      setError(msg || "Erreur de connexion.");
     } finally {
       setLoading(false);
     }
@@ -88,9 +89,11 @@ export default function Login() {
           </button>
         </form>
 
-        <div className={styles.hint}>
-          <p>Utilisateur par défaut: <strong>admin</strong> / Mot de passe: <strong>admin123</strong></p>
-        </div>
+        {import.meta.env.DEV && (
+          <div className={styles.hint}>
+            <p>Utilisateur par défaut: <strong>admin</strong> / Mot de passe: <strong>admin123</strong></p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ pub fn login(app_handle: AppHandle, username: String, password: String) -> Resul
     let app_data_dir = app_handle
         .path()
         .app_data_dir()
-        .expect("failed to get app data directory");
+        .map_err(|_| "Erreur de configuration de l'application.".to_string())?;
 
     let db_path = get_db_path(app_data_dir.as_path());
     let conn = open_connection(&db_path).map_err(|e| e.to_string())?;
@@ -41,7 +41,8 @@ pub fn login(app_handle: AppHandle, username: String, password: String) -> Resul
             return Err("Utilisateur introuvable ou inactif.".to_string());
         }
 
-        let verified = verify(password, &password_hash).map_err(|e| e.to_string())?;
+        let verified = verify(password, &password_hash)
+            .map_err(|_| "Erreur lors de la vérification du mot de passe.".to_string())?;
 
         if verified {
             Ok(PublicUser { id, username: uname, role, display_name })
