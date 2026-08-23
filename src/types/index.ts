@@ -25,8 +25,38 @@ export interface Employee {
   nombre_enfants: number;
   category_id: number | null;
   current_status_id: number | null;
+  status_name?: string | null;
+  category_name?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface EmployeeFormData {
+  matricule: string;
+  nom: string;
+  prenom: string;
+  date_naissance: string;
+  lieu_naissance: string;
+  national_id: string;
+  securite_sociale: string;
+  telephone: string;
+  adresse: string;
+  compte_bancaire: string;
+  situation_familiale: string;
+  nombre_enfants: number;
+  category_id: number | null;
+  current_status_id: number | null;
+}
+
+export interface EmployeeStatusHistory {
+  id: number;
+  employee_id: number;
+  old_status: string | null;
+  new_status: string;
+  date_change: string;
+  reason: string | null;
+  created_by: number | null;
+  created_at: string;
 }
 
 export interface EmployeeStatusType {

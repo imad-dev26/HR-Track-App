@@ -1,10 +1,23 @@
-.container { display: flex; flex-direction: column; gap: var(--space-5); }
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
 
 .toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.searchAndFilters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  flex-wrap: wrap;
 }
 
 .search {
@@ -12,7 +25,8 @@
   display: flex;
   align-items: center;
   flex: 1;
-  max-width: 400px;
+  min-width: 260px;
+  max-width: 380px;
 }
 
 .searchIcon {
@@ -23,19 +37,51 @@
 }
 
 .searchInput {
+  width: 100%;
   padding-left: var(--space-7);
+  padding-right: var(--space-3);
   height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-300);
+  background-color: var(--neutral-0);
+  font-size: var(--font-size-sm);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.searchInput:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px var(--primary-100);
+}
+
+.filterSelect {
+  height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-300);
+  background-color: var(--neutral-0);
+  font-size: var(--font-size-sm);
+  color: var(--neutral-700);
+  outline: none;
+  transition: border-color var(--transition-fast);
+  cursor: pointer;
+}
+
+.filterSelect:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px var(--primary-100);
 }
 
 .count {
   font-size: var(--font-size-sm);
   color: var(--neutral-500);
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .loading {
   text-align: center;
-  padding: var(--space-6);
+  padding: var(--space-8);
   color: var(--neutral-500);
 }
 
@@ -65,28 +111,68 @@
   border-bottom: 1px solid var(--neutral-100);
   font-size: var(--font-size-sm);
   color: var(--neutral-700);
+  vertical-align: middle;
 }
 
 .row {
   transition: background var(--transition-fast);
 }
-.row:hover { background: var(--primary-50); }
+
+.row:hover {
+  background: var(--primary-50);
+}
 
 .matricule {
+  font-family: var(--font-mono, monospace);
   font-weight: 600;
   color: var(--primary-700);
 }
 
+.fullName {
+  font-weight: 600;
+  color: var(--neutral-900);
+}
+
 .statusBadge {
+  display: inline-block;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+}
+
+.statusActive {
+  background-color: var(--success-50);
+  color: var(--success-700);
+  border: 1px solid var(--success-500);
+}
+
+.statusWarning {
+  background-color: var(--warning-50);
+  color: var(--warning-700);
+  border: 1px solid var(--warning-500);
+}
+
+.statusInactive {
+  background-color: var(--neutral-100);
+  color: var(--neutral-600);
+  border: 1px solid var(--neutral-300);
+}
+
+.categoryBadge {
   display: inline-block;
   padding: 2px var(--space-2);
   border-radius: var(--radius-sm);
-  background: var(--neutral-100);
-  color: var(--neutral-600);
+  background-color: var(--primary-50);
+  color: var(--primary-800);
   font-size: var(--font-size-xs);
 }
 
-.actionsCol { text-align: right; }
+.actionsCol {
+  text-align: right;
+  width: 120px;
+}
+
 .actionsCell {
   display: flex;
   gap: var(--space-1);
@@ -94,14 +180,38 @@
 }
 
 .actionBtn {
-  padding: var(--space-1);
-  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--neutral-500);
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   transition: all var(--transition-fast);
 }
-.actionBtn:hover { background: var(--primary-100); color: var(--primary-700); }
 
-.deleteBtn:hover { background: var(--error-50); color: var(--error-600); }
+.actionBtn:hover {
+  background: var(--primary-100);
+  color: var(--primary-700);
+}
+
+.statusChangeBtn:hover {
+  background: var(--warning-50);
+  color: var(--warning-700);
+}
+
+.toastSuccess {
+  background-color: var(--success-50);
+  color: var(--success-700);
+  border: 1px solid var(--success-500);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+  animation: fadeIn 0.2s ease-out;
+}

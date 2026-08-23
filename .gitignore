@@ -8,6 +8,11 @@ dist/
 src-tauri/target/
 src-tauri/gen/
 
+# Test & QA Artifacts
+test-results/
+playwright-screenshots/
+
 # macOS
 .DS_Store
 **/.DS_Store
+
