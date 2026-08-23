@@ -116,6 +116,21 @@ export interface Contract {
   end_date: string | null;
   is_current: number;
   notes: string | null;
+  created_at?: string;
+  updated_at?: string;
+  employee_nom?: string | null;
+  employee_prenom?: string | null;
+  employee_matricule?: string | null;
+  type_name?: string | null;
+}
+
+export interface ContractFormData {
+  employee_id: number | "";
+  contract_type_id: number | "";
+  start_date: string;
+  end_date: string;
+  is_current: number;
+  notes: string;
 }
 
 export interface LeaveType {
