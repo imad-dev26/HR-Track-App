@@ -12,6 +12,9 @@ export const PERMISSIONS: Permission[] = [
   { module: "personnel", action: "edit", label: "Modifier le personnel" },
   { module: "personnel", action: "delete", label: "Supprimer du personnel" },
   { module: "personnel", action: "export", label: "Exporter le personnel" },
+  { module: "organisation", action: "view", label: "Consulter l'organisation" },
+  { module: "organisation", action: "create", label: "Créer des éléments d'organisation" },
+  { module: "organisation", action: "edit", label: "Modifier l'organisation" },
   { module: "contrats", action: "view", label: "Consulter les contrats" },
   { module: "contrats", action: "create", label: "Créer des contrats" },
   { module: "contrats", action: "edit", label: "Modifier les contrats" },
@@ -37,6 +40,7 @@ export const PERMISSIONS: Permission[] = [
 export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   Admin: [
     "personnel:view", "personnel:create", "personnel:edit", "personnel:delete", "personnel:export",
+    "organisation:view", "organisation:create", "organisation:edit",
     "contrats:view", "contrats:create", "contrats:edit",
     "conges:view", "conges:create", "conges:edit",
     "medical:view", "medical:view_details", "medical:create", "medical:edit",
@@ -48,6 +52,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   ],
   Guest: [
     "personnel:view",
+    "organisation:view",
     "contrats:view",
     "conges:view",
     "medical:view",
