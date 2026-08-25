@@ -157,6 +157,50 @@ export interface Leave {
   number_days: number;
   status: string;
   observation: string | null;
+  created_at?: string;
+  updated_at?: string;
+  employee_nom?: string | null;
+  employee_prenom?: string | null;
+  employee_matricule?: string | null;
+  type_name?: string | null;
+  exercise_name?: string | null;
+}
+
+export interface LeaveFormData {
+  employee_id: number | "";
+  leave_type_id: number | "";
+  exercise_id: number | "" | null;
+  start_date: string;
+  end_date: string;
+  number_days: number;
+  status: string;
+  observation: string;
+}
+
+export interface LeaveExerciseFormData {
+  name: string;
+  start_date: string;
+  end_date: string;
+}
+
+export interface RecoveryBalance {
+  id: number;
+  employee_id: number;
+  balance: number;
+  updated_at: string;
+  employee_nom?: string | null;
+  employee_prenom?: string | null;
+  employee_matricule?: string | null;
+}
+
+export interface RecoveryHistory {
+  id: number;
+  employee_id: number;
+  operation_type: string;
+  amount: number;
+  reason: string | null;
+  date: string;
+  created_at: string;
 }
 
 export interface MedicalRecord {
